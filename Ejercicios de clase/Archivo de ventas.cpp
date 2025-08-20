@@ -4,7 +4,6 @@ using namespace std;
 
 struct Venta {
     char fecha[11];         // "YYYY-MM-DD" + '\0'
-    //                          0123 posiciones anio 56 las del mes
     char codigo[8];         // Ej: "ART001" + '\0'
     char descripcion[30];   // Nombre del producto
     char local[6];          // Ej: "LOC01" + '\0'

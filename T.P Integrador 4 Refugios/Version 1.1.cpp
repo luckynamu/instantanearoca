@@ -39,7 +39,7 @@ struct CorredoresCiudad {
     int numero;
     char nombreApellido[50];
     char localidad[40];
-    char ciudad[20];
+    char ciudad[30];
 };
 
 void noTermino(FILE* archivo);
@@ -454,3 +454,4 @@ void mostrarPodios(FILE* archivo){
     }
 
 }
+

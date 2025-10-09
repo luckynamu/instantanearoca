@@ -61,25 +61,25 @@ void extraerPodios(Podios vectorPodios[], int &cantidadPodios, string categorias
 void mostrarPodios(FILE* archivo);
 
 int main(){
-    FILE *archivoCorredores = fopen("C:/Users/mvpas/Documents/Universidad/Algoritmos y Estructuras de Datos/Archivos de T.P/Archivo corredores 4Refugios.bin", "rb+");
+    FILE *archivoCorredores = fopen("Archivo corredores 4Refugios.bin", "rb+");
     if (!archivoCorredores){
         cout << "No se pudo abrir el archivo Corredores 4Refugios.bin\n";
         return 1;
     }
 
-    FILE *archivoClasica = fopen("C:/Users/mvpas/Documents/Universidad/Algoritmos y Estructuras de Datos/Archivos de T.P/clasica.bin", "wb+");
+    FILE *archivoClasica = fopen("clasica.bin", "wb+");
     if (!archivoClasica){
         cout << "No se pudo abrir el archivo clasica.bin\n";
         return 1;
     }
 
-    FILE *archivoNonStop = fopen("C:/Users/mvpas/Documents/Universidad/Algoritmos y Estructuras de Datos/Archivos de T.P/nonStop.bin", "wb+");
+    FILE *archivoNonStop = fopen("nonStop.bin", "wb+");
     if (!archivoNonStop){
         cout << "No se pudo abrir el archivo nonStop.bin\n";
         return 1;
     }
     
-    FILE *archivoPodios = fopen("C:/Users/mvpas/Documents/Universidad/Algoritmos y Estructuras de Datos/Archivos de T.P/podios.bin", "wb+");
+    FILE *archivoPodios = fopen("podios.bin", "wb+");
     if (!archivoPodios){
         cout << "No se pudo abrir el archivo podios.bin\n";
         return 1;
@@ -452,4 +452,5 @@ void mostrarPodios(FILE* archivo){
         imprimirEspacios(diferenciaEspacios);
         cout << podio.llegada << endl;
     }
+
 }

@@ -70,6 +70,7 @@ void mostrarPodios(FILE* archivo);
 void cargarCorredoresCiudad(FILE* archivo, CorredoresCiudadInfo vector[], int &longitud);
 void cargarLlegada(CorredoresCiudadInfo vectorCiudad[], int longitudCorredoresCiudad, RegCorredores vectorCorredores[], int longitudCorredores);
 void ordenarPorLocalidadCiudad(CorredoresCiudadInfo vectorCiudad[], int longitud);
+int cantidadDigitos(int n);
 void reporteCiudades(CorredoresCiudadInfo vector[], int longitud);
 
 int main(){
@@ -186,10 +187,11 @@ int main(){
     //Paso 15: Para cada corredor, buscar en el vector original utilizando su numero, el tiempo de llegada.
     cargarLlegada(vectorCorredoresCiudad, cantidadCorredoresCiudades, vectorCorredores, cantidadCorredores);
 
-    //Paso 16: Ordenamos el vector CorredoresCiudad por localidad y luego por ciudad.
+    //Paso 16: Ordenamos el vector CorredoresCiudad por localidad y luego por ciudad para agrupar a los corredores que pertenecen al mismo lugar.
     ordenarPorLocalidadCiudad(vectorCorredoresCiudad, cantidadCorredoresCiudades);
     
     //Paso 17: Mostrar el reporte de cada localidad y ciudad.
+    cout << "---------- Reporte de Corredores por Ciudad ----------" << endl;
     reporteCiudades(vectorCorredoresCiudad, cantidadCorredoresCiudades);
     return 0;    
 }
@@ -398,31 +400,64 @@ void imprimirEspacios(int cantidadEspacios){
     cout << "\t";
 }
 
+int cantidadDigitos(int n){
+    if (n == 0){
+        return 1;
+    }
+    int digitos = 0;
+    if (n < 0){
+        digitos++;
+        n = -n;
+    }
+    while (n > 0){
+        digitos++;
+        n /= 10;
+    }
+    return digitos;
+}
+
 void mostrarReporte(FILE* archivo){
     fseek(archivo, 0, SEEK_SET);
     ListadoCarrera carreras;
-    int diferenciaEspacios = 0;
+    //Establecemos los encabezados y los alineamos.
+    cout << "Pos. Gral.\t";
+    cout << "Pos. Gen.\t";
+    cout << "Pos. Cat.\t";
+    cout << "Nro.\t";
+    cout << "Nombre y apellido";
+    imprimirEspacios(sizeof(carreras.nombreApellido) - strlen("Nombre y apellido"));
+    cout << "Categoria";
+    imprimirEspacios(sizeof(carreras.categoria) - strlen("Categoria"));
+    cout << "Genero\t";
+    cout << "Localidad";
+    imprimirEspacios(sizeof(carreras.localidad) - strlen("Localidad"));
+    cout << "Total";
+    imprimirEspacios(sizeof(carreras.llegada) - strlen("Total"));
+    cout << "Dif. Primero";
+    imprimirEspacios(sizeof(carreras.difPrimero) - strlen("Dif. Primero"));
+    cout << "Dif. Anterior" << endl;
+
     while(fread(&carreras, sizeof(ListadoCarrera), 1, archivo) == 1){
-        cout << carreras.posGeneral << "\t";
-        cout << carreras.posGenero << "\t";
-        cout << carreras.posCat << "\t";
-        cout << carreras.numero << "\t";
+        cout << carreras.posGeneral;
+        imprimirEspacios(strlen("Pos. Gral.") - cantidadDigitos(carreras.posGeneral));
+        cout << carreras.posGenero;
+        imprimirEspacios(strlen("Pos. Gen.") - cantidadDigitos(carreras.posGenero));
+        cout << carreras.posCat;
+        imprimirEspacios(strlen("Pos. Cat.") - cantidadDigitos(carreras.posCat));
+        cout << carreras.numero;
+        imprimirEspacios(strlen("Nro.") - cantidadDigitos(carreras.numero));
         cout << carreras.nombreApellido;
-        diferenciaEspacios = (sizeof(carreras.nombreApellido) - 1) - strlen(carreras.nombreApellido);
-        imprimirEspacios(diferenciaEspacios);
+        imprimirEspacios(sizeof(carreras.nombreApellido) - strlen(carreras.nombreApellido));
         cout << carreras.categoria;
-        diferenciaEspacios = (sizeof(carreras.categoria) - 1) - strlen(carreras.categoria);
-        imprimirEspacios(diferenciaEspacios);
-        cout << carreras.genero << "\t";
+        imprimirEspacios(sizeof(carreras.categoria) - strlen(carreras.categoria));
+        cout << carreras.genero;
+        imprimirEspacios(strlen("Genero") - 1);
         cout << carreras.localidad;
-        diferenciaEspacios = (sizeof(carreras.localidad) - 1) - strlen(carreras.localidad);
-        imprimirEspacios(diferenciaEspacios);
+        imprimirEspacios(sizeof(carreras.localidad) - strlen(carreras.localidad));
         cout << carreras.llegada;
-        diferenciaEspacios = (sizeof(carreras.llegada) - 1) - strlen(carreras.llegada);
-        imprimirEspacios(diferenciaEspacios);
+        imprimirEspacios(sizeof(carreras.llegada) - strlen(carreras.llegada));
         cout << carreras.difPrimero;
-        diferenciaEspacios = (sizeof(carreras.difPrimero) - 1) - strlen(carreras.difPrimero);
-        imprimirEspacios(diferenciaEspacios);
+        imprimirEspacios(sizeof(carreras.difPrimero) - strlen(carreras.difPrimero));
         cout << carreras.difAnterior << endl;
     }
 }
@@ -465,21 +500,40 @@ void extraerPodios(Podios vectorPodios[], int &cantidadPodios, string categorias
 void mostrarPodios(FILE* archivo){
     fseek(archivo, 0, SEEK_SET);
     Podios podio;
-    int diferenciaEspacios = 0;
+    //Establecemos los encabezados y los alineamos.
+    cout << "Pos.\t";
+    cout << "Nro.\t";
+    cout << "Nombre y apellido";
+    imprimirEspacios(sizeof(podio.nombreApellido) - strlen("Nombre y apellido"));
+    cout << "Categoria";
+    imprimirEspacios(sizeof(podio.categoria) - strlen("Categoria"));
+    cout << "Genero\t";
+    cout << "Localidad";
+    imprimirEspacios(sizeof(podio.localidad) - strlen("Localidad"));
+    cout << "Total" << endl;
+
+    int contador = 0;
+
     while(fread(&podio, sizeof(Podios), 1, archivo) == 1){
-        cout << podio.posCat << "\t";
-        cout << podio.numero << "\t";
+        cout << podio.posCat;
+        imprimirEspacios(strlen("Pos.") - cantidadDigitos(podio.posCat));
+        cout << podio.numero;
+        imprimirEspacios(strlen("Nro.") - cantidadDigitos(podio.numero));
         cout << podio.nombreApellido;
-        diferenciaEspacios = (sizeof(podio.nombreApellido) - 1) - strlen(podio.nombreApellido);
-        imprimirEspacios(diferenciaEspacios);
+        imprimirEspacios(sizeof(podio.nombreApellido) - strlen(podio.nombreApellido));
         cout << podio.categoria;
-        diferenciaEspacios = (sizeof(podio.categoria) - 1) - strlen(podio.categoria);
-        imprimirEspacios(diferenciaEspacios);
-        cout << podio.genero << "\t";
+        imprimirEspacios(sizeof(podio.categoria) - strlen(podio.categoria));
+        cout << podio.genero;
+        imprimirEspacios(strlen("Genero") - 1);
         cout << podio.localidad;
-        diferenciaEspacios = (sizeof(podio.localidad) - 1) - strlen(podio.localidad);
-        imprimirEspacios(diferenciaEspacios);
+        imprimirEspacios(sizeof(podio.localidad) - strlen(podio.localidad));
         cout << podio.llegada << endl;
+        contador++;
+        //Se muestra una linea separadora cada vez que se cambia de categoria.
+        if(contador == 3){
+            cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+            contador = 0;
+        }
     }
 }
 
@@ -524,21 +578,28 @@ void ordenarPorLocalidadCiudad(CorredoresCiudadInfo vectorCiudad[], int longitud
     }
 }
 
-void reporteCiudades(CorredoresCiudadInfo vector[], int longitud) {
-    if (longitud == 0) return;
+void reporteCiudades(CorredoresCiudadInfo vector[], int longitud){
+    cout << "Localidad";
+    imprimirEspacios(sizeof(vector[0].localidad) - strlen("Localidad"));
+    cout << "Ciudad";
+    imprimirEspacios(sizeof(vector[0].ciudad) - strlen("Ciudad"));
+    cout << "Cantidad de Corredores\t";
+    cout << "Tiempo Promedio" << endl;
 
     char localidadActual[40];
     char ciudadActual[30];
+    //Copiamos la primer ciudad y localidad del vector.
     strcpy(localidadActual, vector[0].localidad);
     strcpy(ciudadActual, vector[0].ciudad);
-
+    //Establecemos los contadores.
     int corredoresLocalidad = 0;
     float tiempoTotalLocalidad = 0;
-
     int corredoresCiudad = 0;
     float tiempoTotalCiudad = 0;
 
-    for (int i = 0; i < longitud; i++) {
+    bool mostrarLocalidad = true;
+
+    for (int i = 0; i < longitud; i++){
         float tiempo = convertirASegundos(vector[i].llegada);
         if (tiempo != -1) {
             tiempoTotalCiudad += tiempo;
@@ -546,43 +607,46 @@ void reporteCiudades(CorredoresCiudadInfo vector[], int longitud) {
         }
         corredoresCiudad++;
         corredoresLocalidad++;
-
+        
         bool cambiaCiudad = (i == longitud - 1) || strcmp(vector[i].ciudad, vector[i + 1].ciudad) != 0;
         bool cambiaLocalidad = (i == longitud - 1) || strcmp(vector[i].localidad, vector[i + 1].localidad) != 0;
 
-        if (cambiaCiudad) {
-            float promedioCiudad = (corredoresCiudad > 0) ? tiempoTotalCiudad / corredoresCiudad : 0;
-            cout << "Localidad: " << localidadActual << " | Ciudad: " << ciudadActual
-                 << " | Corredores: " << corredoresCiudad
-                 << " | Tiempo promedio: ";
-            if (promedioCiudad > 0) {
-                char tiempoProm[11];
-                segundosAFormato(promedioCiudad, tiempoProm);
-                cout << tiempoProm;
-            } else {
-                cout << "-";
+        //Si cambia la ciudad en la siguiente posicion, mostramos sus totales y promedios.
+        if (cambiaCiudad){
+            float promedioCiudad = tiempoTotalCiudad / corredoresCiudad;
+            if (mostrarLocalidad){
+                cout << localidadActual;
+                imprimirEspacios(sizeof(vector[i].localidad) - strlen(localidadActual));
+                mostrarLocalidad = false;
+            }else{
+                imprimirEspacios(sizeof(vector[i].localidad));
             }
-            cout << endl;
+            cout << ciudadActual;
+            imprimirEspacios(sizeof(vector[i].ciudad) - strlen(ciudadActual));
+            cout << corredoresCiudad;
+            imprimirEspacios(strlen("Cantidad de Corredores") - cantidadDigitos(corredoresCiudad));
+            char tiempoPromedioCiudad[11];
+            segundosAFormato(promedioCiudad, tiempoPromedioCiudad);
+            cout << tiempoPromedioCiudad << endl;
 
             corredoresCiudad = 0;
             tiempoTotalCiudad = 0;
-            if (!cambiaLocalidad && i + 1 < longitud)
-                strcpy(ciudadActual, vector[i + 1].ciudad);
-        }
-
-        if (cambiaLocalidad) {
-            float promedioLocalidad = (corredoresLocalidad > 0) ? tiempoTotalLocalidad / corredoresLocalidad : 0;
-            cout << "Resumen Localidad: " << localidadActual
-                 << " | Corredores: " << corredoresLocalidad
-                 << " | Tiempo promedio: ";
-            if (promedioLocalidad > 0) {
-                char tiempoPromLoc[11];
-                segundosAFormato(promedioLocalidad, tiempoPromLoc);
-                cout << tiempoPromLoc;
-            } else {
-                cout << "-";
+            if (!cambiaLocalidad && (i + 1) < longitud){
+                strcpy(ciudadActual, vector[i+1].ciudad);
             }
-            cout << endl << "----------------------------------------" << endl;
+        }
+        //Si cambia la localidad en la siguiente posicion, mostramos sus totales y promedios.
+        if (cambiaLocalidad){
+            float promedioLocalidad = tiempoTotalLocalidad / corredoresLocalidad;
+            cout << "Total " << localidadActual;
+            imprimirEspacios(sizeof(vector[i].localidad) - strlen(localidadActual) - strlen("Total "));
+            imprimirEspacios(sizeof(vector[i].ciudad));
+            cout << corredoresLocalidad;
+            imprimirEspacios(strlen("Cantidad de Corredores") - cantidadDigitos(corredoresLocalidad));
+            char tiempoPromedioLocalidad[11];
+            segundosAFormato(promedioLocalidad, tiempoPromedioLocalidad);
+            cout << tiempoPromedioLocalidad << endl;
+            cout << "----------" << endl;
 
             corredoresLocalidad = 0;
             tiempoTotalLocalidad = 0;
@@ -590,6 +654,7 @@ void reporteCiudades(CorredoresCiudadInfo vector[], int longitud) {
                 strcpy(localidadActual, vector[i + 1].localidad);
                 strcpy(ciudadActual, vector[i + 1].ciudad);
             }
+            mostrarLocalidad = true;
         }
     }
 }
